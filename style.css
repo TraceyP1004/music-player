@@ -8,7 +8,7 @@ body {
   background: linear-gradient(0deg, #f7f7f7 24%, #fcdddd 92%);
   font-family: 'Lato', sans-serif;
   margin: 0;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   flex-direction: column;
   align-items: center;
