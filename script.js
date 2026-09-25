@@ -8,21 +8,40 @@ const progress = document.getElementById('progress');
 const progressContainer = document.getElementById('progress-container');
 const title = document.getElementById('title');
 const cover = document.getElementById('cover');
+const currentTimeText = document.getElementById('current-time');
+const durationText = document.getElementById('duration');
+
+function formatTime(time) {
+    if (Number.isNaN(time) || time < 0) return '0:00';
+
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${String(seconds).padStart(2, '0')}`;
+}
 
 const songs = ['apotos', 'mazuri', 'empire-city']
 let songIndex = 2;
 
+const songTitles = {
+    'apotos': 'Apotos (Night)',
+    'mazuri': 'Mazuri (Night)',
+    'empire-city': 'Empire City (Night)'
+};
+
 function loadSong(song) {
-    title.innerText = song;
+    title.innerText = songTitles[song];
     audio.src = `music/${song}.mp3`;
     cover.src = `images/${song}.jpg`;
+    currentTimeText.textContent = '0:00';
+    durationText.textContent = '0:00';
 }
 
 loadSong(songs[songIndex]);
 
 function playSong() {
     musicContainer.classList.add('play');
-    playBtn.querySelector('i.fas').classList.remove('fa-play', 'fa-pause');
+    playBtn.querySelector('i.fas').classList.remove('fa-play');
+    playBtn.querySelector('i.fas').classList.add('fa-pause');
     audio.play();
 }
 
@@ -55,9 +74,15 @@ function updateProgress(e) {
     const { duration, currentTime } = e.srcElement;
     const percent = (currentTime / duration) * 100;
     progress.style.width = `${percent}%`;
+
+        currentTimeText.textContent = formatTime(currentTime);
+        durationText.textContent = formatTime(duration);
 }
 
 audio.addEventListener('timeupdate', updateProgress);
+audio.addEventListener('loadedmetadata', () => {
+    durationText.textContent = formatTime(audio.duration);
+});
 
 function setProgress(e) {
     const width = this.clientWidth;
